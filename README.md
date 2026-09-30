@@ -29,6 +29,9 @@ upstream (Wrap toggle for long lines, visible `change-0NN` step ids) — see
 `skills/pair-review/SKILL.md` §-1 for the one-time setup (clone
 `shukebeta/diffwalk`, branch `local-both`, build with the pinned bun version).
 
-Auto split-view and auto-scroll-to-anchor are scripted for Windows
-(PowerShell) and Linux/X11 (`wmctrl` + `xdotool`). macOS has no script yet —
-the skill still works, you just lose those two conveniences.
+Auto split-view is scripted for Windows (PowerShell) and Linux/X11 (`wmctrl` +
+`xdotool`); both open a dedicated Chrome / Chromium / Edge with a CDP port, and
+`scripts/focus.mjs` (Node 18+, `playwright-core` — run `npm i` in `scripts/`
+once) scrolls that browser to the block under discussion and highlights its
+lines. On macOS, start the same browser by hand (see SKILL.md §3) and
+`focus.mjs` works as-is.

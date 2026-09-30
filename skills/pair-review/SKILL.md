@@ -153,17 +153,19 @@ For the current unit:
    **Name the unit the way the operator sees it**: `change-0NN` ids are anchors
    in the exported page, never visible labels, so a bare id leaves the operator
    guessing which hunk you mean. Lead with `<file>:<line>` and the changed line
-   itself; add `#change-0NN` only as a jump target for the open page.
-   **Scroll the open browser there** before explaining, so the operator is
-   looking at the right block without hunting for it themselves:
+   itself — the browser highlight below points at it, the id alone does not.
+   **Scroll and highlight in the open browser** before explaining, so the
+   operator is looking at exactly the lines you are about to talk about:
    ```sh
-   # Windows
-   powershell -NoProfile -ExecutionPolicy Bypass -File "<skill dir>/scripts/scroll-to.ps1" -Html .diffwalk/<ticket>-walkthrough.html -Anchor change-0NN
-   # Linux (X11 only — needs wmctrl + xdotool)
-   "<skill dir>/scripts/scroll-to.sh" .diffwalk/<ticket>-walkthrough.html change-0NN
+   node "<skill dir>/scripts/focus.mjs" change-0NN --at <path>:42-50,60 [--at <path2>:10:old]
    ```
-   No macOS script yet — say the anchor out loud and let the operator click it.
-   For a multi-block unit, jump to the first block's anchor.
+   `<path>` and line numbers come from `diffwalk change <id>` (new side unless
+   `:old`, for deleted lines); `change-0NN` is the unit's first block. The first
+   `--at` is scrolled to centre; every `--at` is highlighted, and the previous
+   highlight clears. Re-point it whenever the discussion moves to other lines
+   within the unit. Add `--reload` after a re-export. It drives the browser
+   over CDP, so the terminal keeps focus. Without the §3 browser, say the
+   `<file>:<line>` out loud instead.
 2. **Explain and assess** in one message:
    - What this unit does, in plain language, pointing at exact lines.
    - Why it is there (or that the purpose is unclear — say so).
@@ -211,16 +213,20 @@ diffwalk export html --output .diffwalk/<ticket>-walkthrough.html
 powershell -NoProfile -ExecutionPolicy Bypass -File "<skill dir>/scripts/split-view.ps1" -Html .diffwalk/<ticket>-walkthrough.html
 # Linux (X11 only — needs wmctrl + xdotool): same split, top/bottom
 "<skill dir>/scripts/split-view.sh" .diffwalk/<ticket>-walkthrough.html
-# macOS: no split script yet — just open <path>
+# macOS: no split script yet — open the same CDP browser by hand
+open -na "Google Chrome" --args --remote-debugging-port=9333 --user-data-dir="$HOME/.cache/pair-review-browser" "file://$PWD/.diffwalk/<ticket>-walkthrough.html"
 ```
 
 (Assumes the `diffwalk` alias from §-1 — the local-both build renders visible
 `change-0NN` ids and a Wrap toggle natively, no post-processing needed.)
 
-The Windows/Linux scripts drive Chrome / Edge / Firefox; on macOS, or if
-neither script's window manager is available, just open the file — you lose
-the auto-split and auto-scroll conveniences, not the underlying skill. Prefer
-scripted opening over `diffwalk view`, which holds a server in the
+The scripts launch a dedicated Chrome / Chromium / Edge on its own profile with
+CDP port 9333, which `focus.mjs` (§2) drives through `playwright-core`;
+re-running one with another walkthrough reuses that window. If
+`scripts/node_modules` is missing, run `npm i` in `scripts/` once. Without a
+CDP browser (Firefox, no window manager), just open the file — you lose the
+split and the highlight, not the skill. Prefer scripted opening over
+`diffwalk view`, which holds a server in the
 foreground. Export once before round 1 so the operator has the diff in front of
 them; after that a re-export per agreed unit or a single one at the end are
 equally fine — it lands at the same path and the operator just refreshes. The

@@ -1,0 +1,7 @@
+{
+  "name": "pair-review-scripts",
+  "private": true,
+  "dependencies": {
+    "playwright-core": "^1.63.0"
+  }
+}
