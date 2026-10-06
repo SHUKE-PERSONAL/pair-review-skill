@@ -169,7 +169,7 @@ For the current unit:
 2. **Explain and assess** in one message:
    - What this unit does, in plain language, pointing at exact lines.
    - Why it is there (or that the purpose is unclear — say so).
-   - XiaoH's own take: correctness, edge cases, risks, naming/style, simpler
+   - The agent's own take: correctness, edge cases, risks, naming/style, simpler
      alternatives, questions worth asking the author.
    - Keep it to what static reading of the diff and its immediate context
      supports. Mark anything unproven as a suspicion, in one line, and say what
