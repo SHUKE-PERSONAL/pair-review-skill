@@ -246,6 +246,11 @@ links), follow-ups left open, and the HTML path. If the review produced a fix of
 our own, commit it now — tests and checks first — and say in the close-out that
 the walk's capture predates that commit. Do not `publish` unless asked.
 
+The walk is a log, not a knowledge base. In the close-out, list the facts the
+review settled with evidence. These are system mechanics or data realities
+that will matter beyond this PR. Present them as candidates for the operator's
+own notes, and record none of them unless the operator picks it.
+
 Stopping mid-review is normal — the walk plus its pending markers *is* the saved
 state, so just say which unit is next and leave the walk current.
 
