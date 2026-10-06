@@ -62,13 +62,16 @@ toggle. Always build with the version pinned in that repo's
 itself won't start (e.g. the CPU lacks AVX2), use the copy npx leaves behind
 instead of the standalone `bun.exe`.
 
-Then, once per shell session, before running any `diffwalk` command in this
-skill — every command below (`inspect`, `changes`, `change`, `walks`, `use`,
-`check`, `export`, `view`) is a drop-in match:
+Then put it on `PATH`, in place of any upstream global install, from the clone:
 
 ```sh
-alias diffwalk='node /path/to/diffwalk/dist/diffwalk.js'
+npm uninstall -g diffwalk   # or: pnpm rm -g diffwalk
+npm link
 ```
+
+`npm link` creates a `diffwalk` command on `PATH` that points at the clone, so
+every shell the agent spawns finds it and a rebuild takes effect without
+reinstalling. Check `command -v diffwalk` resolves to it before starting.
 
 Verify the build before trusting an export:
 `grep -c 'wrap-form' <exported.html>` should be non-zero.
@@ -217,7 +220,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File "<skill dir>/scripts/split-v
 open -na "Google Chrome" --args --remote-debugging-port=9333 --user-data-dir="$HOME/.cache/pair-review-browser" "file://$PWD/.diffwalk/<ticket>-walkthrough.html"
 ```
 
-(Assumes the `diffwalk` alias from §-1 — the local-both build renders visible
+(Assumes the `diffwalk` from §-1 — the local-both build renders visible
 `change-0NN` ids and a Wrap toggle natively, no post-processing needed.)
 
 The scripts launch a dedicated Chrome / Chromium / Edge on its own profile with

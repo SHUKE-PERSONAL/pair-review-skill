@@ -27,7 +27,8 @@ Start a new agent session after installing.
 This skill needs a build of Diffwalk with two features not yet merged
 upstream (Wrap toggle for long lines, visible `change-0NN` step ids) — see
 `skills/pair-review/SKILL.md` §-1 for the one-time setup (clone
-`shukebeta/diffwalk`, branch `local-both`, build with the pinned bun version).
+`shukebeta/diffwalk`, branch `local-both`, build with the pinned bun version,
+then `npm link`).
 
 Auto split-view is scripted for Windows (PowerShell) and Linux/X11 (`wmctrl` +
 `xdotool`); both open a dedicated Chrome / Chromium / Edge with a CDP port, and
