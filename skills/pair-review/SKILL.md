@@ -33,9 +33,9 @@ apply the fix, but **do not commit it mid-review**, so later captures stay on
 the same base (`git stash` it if it gets in the way of one). Commit it at the
 end, after the tests and checks that change deserves.
 
-## -1. Use the patched diffwalk build, not the globally installed one
+## -1. Use the patched diffwalk build, not upstream's
 
-The globally installed `diffwalk` (npm/pnpm, as of v0.1.10) lacks two features
+Upstream `diffwalk` (npm/pnpm, as of v0.1.10) lacks two features
 this skill relies on: a Wrap toggle for long lines, and visible `change-0NN`
 ids next to each step permalink (otherwise it renders the generic text
 "LINK", useless for naming a block out loud). Both are merged into
