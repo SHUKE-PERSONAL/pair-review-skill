@@ -84,6 +84,7 @@ const result = await page.evaluate(async ({ change, targets }) => {
 
     const report = []
     let first = null
+    const columns = []
     for (const t of targets) {
         const file = [...step.querySelectorAll('details.file')].find((d) =>
             d.querySelector('summary').textContent.split(' ').some((word) => word === t.path),
@@ -130,11 +131,15 @@ const result = await page.evaluate(async ({ change, targets }) => {
         )
         const hits = [...column.querySelectorAll('[data-line-index]')].filter((el) => indexes.has(el.dataset.lineIndex))
         for (const el of hits) el.setAttribute('data-pr-hl', '')
+        columns.push(column)
         report.push(`${t.path}: ${indexes.size} ${t.side} line(s) highlighted`)
         first ??= hits.find((el) => el.hasAttribute('data-line')) ?? file
     }
 
+    // scrollIntoView also scrolls a wide code column sideways; keep its horizontal position
+    const scrollLefts = columns.map((c) => c.scrollLeft)
     ;(first ?? step).scrollIntoView({ block: first ? 'center' : 'start' })
+    columns.forEach((c, i) => { c.scrollLeft = scrollLefts[i] })
     return { report }
 }, { change, targets })
 
